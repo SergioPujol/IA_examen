@@ -1,11 +1,11 @@
 (deffacts datos 
 	(magico 21)
-	(numeros 5 3 8 14 7)
+	(numeros 5 3 8 14 7 camino)
 )
 
 (defrule comprobar
 	(declare (salience 50))
-	(numeros $?numeros ?ultimo)
+	(numeros $?numeros ?ultimo camino $?c)
 	(magico ?n)
 	(test (= ?ultimo ?n))	
 	(test (= (length$ $?numeros) 0))
@@ -13,13 +13,14 @@
 	=>
 
 	(printout t "Numero magico calculado"  crlf )
+	(printout t "Operaciones: " $?c  crlf )
 	(halt)
 )
 
 (defrule suma
-	(numeros $?primeros ?numero1 $?centro ?numero2 $?ultimos)
+	(numeros $?primeros ?numero1 $?centro ?numero2 $?ultimos camino $?c)
 =>
-	(assert (numeros $?primeros $?centro $?ultimos (+ ?numero1 ?numero2)))
+	(assert (numeros $?primeros $?centro $?ultimos (+ ?numero1 ?numero2) camino suma $?c))
 )
 
 (defrule multiplicacion
@@ -30,9 +31,17 @@
 
 (defrule resta
 	(numeros $?primeros ?numero1 $?centro ?numero2 $?ultimos)
+	(test (= (mod ?numero1 ?numero2) 0))
+=>
+	(assert (numeros $?primeros $?centro $?ultimos (- ?numero1 ?numero2)))
+)
+
+(defrule division
+	(numeros $?primeros ?numero1 $?centro ?numero2 $?ultimos)
 	(test (> (- ?numero1 ?numero2) 0))
 =>
-	(assert (numeros $?primeros $?centro $?ultimos (* ?numero1 ?numero2)))
+	(assert (numeros $?primeros $?centro $?ultimos (div ?numero1 ?numero2)))
 )
+
 
 
