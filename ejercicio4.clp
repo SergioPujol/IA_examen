@@ -7,7 +7,8 @@
 	(declare (salience 50))
 	(numeros $?numeros ?ultimo)
 	(magico ?n)
-	(test (= ?ultimo ?n)
+	(test (= ?ultimo ?n))	
+	(test (= (length$ $?numeros) 0))
 	
 	=>
 
@@ -16,21 +17,22 @@
 )
 
 (defrule suma
-	(numeros $?primeros $numero1 $?centro $numero2 $?ultimos)
+	(numeros $?primeros ?numero1 $?centro ?numero2 $?ultimos)
 =>
-(assert (numeros $?primeros $?centro $?ultimos (+ $numero1 $numero2))))
-
-(defrule resta
-	(numeros $?primeros $numero1 $?centro $numero2 $?ultimos)
-=>
-(assert (numeros $?primeros $?centro $?ultimos (- $numero1 $numero2))))
+	(assert (numeros $?primeros $?centro $?ultimos (+ ?numero1 ?numero2)))
+)
 
 (defrule multiplicacion
-	(numeros $?primeros $numero1 $?centro $numero2 $?ultimos)
+	(numeros $?primeros ?numero1 $?centro ?numero2 $?ultimos)
 =>
-(assert (numeros $?primeros $?centro $?ultimos (* $numero1 $numero2))))
+	(assert (numeros $?primeros $?centro $?ultimos (* ?numero1 ?numero2)))
+)
 
-(defrule division
-	(numeros $?primeros $numero1 $?centro $numero2 $?ultimos)
+(defrule resta
+	(numeros $?primeros ?numero1 $?centro ?numero2 $?ultimos)
+	(test (> (- ?numero1 ?numero2) 0))
 =>
-(assert (numeros $?primeros $?centro $?ultimos (/ $numero1 $numero2))))
+	(assert (numeros $?primeros $?centro $?ultimos (* ?numero1 ?numero2)))
+)
+
+
